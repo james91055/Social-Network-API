@@ -1,46 +1,46 @@
-const { Schema, model } = require('mongoose');
-const reactionSchema = require('./Reaction');
-const dayjs = require('dayjs');
+const { Schema, model } = require("mongoose");
+const reactionSchema = require("./Reaction");
+const dayjs = require("dayjs");
 
 // Schema to create Post model
 const thoughtSchema = new Schema(
   {
-    published: {
-      type: Boolean,
-      default: false,
+    thoughtText: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 280,
     },
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (date) => {
+        if (date) return dayjs(date).format("MM-DD-YYYY h:mma");
+      },
     },
-    buildSuccess: {
-      type: Boolean,
-      default: true,
-    },
-    description: {
+    username: {
       type: String,
-      minLength: 15,
-      maxLength: 500,
+      required: true,
     },
-    tags: [Tag],
+    reactions: [reactionSchema],
   },
   {
     toJSON: {
       virtuals: true,
+      getters: true,
     },
     id: false,
   }
 );
 
-// Create a virtual property `getTags` that gets the amount of tags associated with an thought
 thoughtSchema
-  .virtual('getResponses')
+  .virtual("reactionCount")
   // Getter
   .get(function () {
-    return this.tags.length;
+    return this.reactions.length;
   });
 
 // Initialize our thought model
-const Thought = model('thought', thoughtSchema);
+const Thought = model("thought", thoughtSchema);
 
 module.exports = Thought;

@@ -8,21 +8,42 @@ let validateEmail = function (email) {
 // Schema to create User model
 const userSchema = new Schema(
   {
-    first: String,
-    last: String,
-    age: Number,
-    applications: [
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      max_length: 50,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      max_length: 50,
+      trim: true,
+      lowercase: true, // problem here
+      validate: [validateEmail, "Please fill a valid email address"],
+      match: [
+        /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
+        "Please fill a valid email address",
+      ],
+    },
+    thoughts: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Application",
+        ref: "thought",
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
       },
     ],
   },
   {
-    // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
-    // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
     toJSON: {
-      virtuals: true,
+      getters: true,
       virtuals: true,
     },
     id: false,
