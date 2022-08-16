@@ -6,4 +6,3 @@ router.use("/thoughts", thoughtRoutes);
 router.use("/users", userRoutes);
 
 module.exports = router;
-s;
