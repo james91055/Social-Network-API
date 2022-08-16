@@ -5,6 +5,7 @@ let validateEmail = function (email) {
   var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(email);
 };
+
 // Schema to create User model
 const userSchema = new Schema(
   {
@@ -21,7 +22,7 @@ const userSchema = new Schema(
       unique: true,
       max_length: 50,
       trim: true,
-      lowercase: true,
+      lowercase: true, // problem here
       validate: [validateEmail, "Please fill a valid email address"],
       match: [
         /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
@@ -49,15 +50,11 @@ const userSchema = new Schema(
     id: false,
   }
 );
+// access the friend array to get the number of friends
+userSchema.virtual("friendCount").get(function () {
+  return this.friends.length;
+});
 
-userSchema
-  .virtual("friendCount")
-  // Getter
-  .get(function () {
-    return this.friends.length;
-  });
-
-// Initialize our User model
 const User = model("user", userSchema);
 
 module.exports = User;
