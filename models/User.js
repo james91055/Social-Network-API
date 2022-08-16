@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const thoughtsSchema = require("./Thought");
+// const thoughtsSchema = require("./Thought");
 
 let validateEmail = function (email) {
   var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -22,7 +22,7 @@ const userSchema = new Schema(
       unique: true,
       max_length: 50,
       trim: true,
-      lowercase: true, // problem here
+      lowercase: true,
       validate: [validateEmail, "Please fill a valid email address"],
       match: [
         /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
@@ -44,7 +44,6 @@ const userSchema = new Schema(
   },
   {
     toJSON: {
-      getters: true,
       virtuals: true,
     },
     id: false,
